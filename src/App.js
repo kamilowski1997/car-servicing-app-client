@@ -1,23 +1,38 @@
 import './App.css';
+import SignUp from './SignUp';
+import MainPage from './MainPage'
+
+import React, { useEffect, useState } from 'react';
+import NotFoundPage from './404.js'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link, 
+  Redirect
+} from "react-router-dom";
+
+
 
 function App() {
+
   return (
-    <div className="App">
-      <h1>CRUD</h1>
-      <div>
-        <label>Name: </label>
-        <input type="text" name="name" />
-        <label>Email: </label>
-        <input type="text" name="email" />
-        <label>Password: </label>
-        <input type="text" name="passw" />
-
-        <button>Submit</button>
-      </div>
-      
-
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <MainPage />
+        </Route>
+        <Route path="/signUp">
+          <SignUp />
+        </Route>
+        <Route path="/404" >
+          <NotFoundPage />
+        </Route>
+        <Redirect to='/404'  />
+      </Switch>
+    </Router>
   );
+  
 }
 
 export default App;
