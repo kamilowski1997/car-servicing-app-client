@@ -14,16 +14,20 @@ export default function MainPage() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [isAuth, setIsAuth] = useState(false);
   const [isBeforeRender, setIsBeforeRender] = useState(true);
+  const [selectedVehicleId, setSelectedVehicleId] = useState();
 
   const server = 'http://localhost:3001';
 
-  useEffect(async() =>{
+  useEffect(() =>{
+    
     if(isBeforeRender){
       if(!isAuth){
-        await authorize();
+        authorize();
+      }else{
+        setSelectedVehicleId(localStorage.getItem('selectedVehicleId'));
       }
     }
-    
+
   });
 
   const authorize = async()=>{
@@ -44,8 +48,8 @@ export default function MainPage() {
         setIsBeforeRender(false);
       })
       .catch((err) => {
-        console.log(err);
         setIsBeforeRender(false);
+        console.log(err);
       });
   };
   

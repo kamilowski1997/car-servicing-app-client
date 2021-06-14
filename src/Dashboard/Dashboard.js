@@ -1,4 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import { secondaryListItems } from './listItems';
+import SelectedVehicle from './SelectedVehicle';
+import Vehicles from './Vehicles';
+import { useHistory} from "react-router-dom";
+
+//material-ui imports
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,17 +24,37 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-import Deposits from './Deposits';
-import Orders from './Orders';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import LibraryBooksOutlinedIcon from '@material-ui/icons/LibraryBooksOutlined';
+import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
+import DirectionsCarOutlinedIcon from '@material-ui/icons/DirectionsCarOutlined';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PeopleIcon from '@material-ui/icons/People';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import LayersIcon from '@material-ui/icons/Layers';
+import AddVehicle from './AddVehicle';
+import Services from './Services';
+import AddService from './AddService';
+
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
+      {/*
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
       </Link>{' '}
+      */}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -117,8 +143,43 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
+  
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [open, setOpen] = useState(true);
+  const [selectedVehicleId, setSelectedVehicleId] = useState(localStorage.getItem('selectedVehicleId'));
+  const [selectedContent, setselectedContent] = useState('Vehicles');
+  const [username, setUsername] = useState();
+  const [refresh, setRefresh] = useState();
+
+  useEffect(()=>{
+    getUsername();
+  },[]);
+
+  const server = 'http://localhost:3001';
+  const getUsername = async()=>{
+    setToken(localStorage.getItem('token'));
+
+    fetch(`${server}/api/getUsername`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem('token'),
+      },
+    })
+      .then((res) => {
+        //console.log(res)
+        return res.json();
+      })
+      .then((data) => {
+        setUsername(data[0].name);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const history = useHistory();
+
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -126,6 +187,95 @@ export default function Dashboard() {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  let mainContent=<div></div>;
+
+  if(selectedContent=='Vehicles'){
+    mainContent=
+      <Grid container spacing={3}>
+        {/* SelectedVehicle */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+          {/*<Paper className={fixedHeightPaper}>*/}
+            <SelectedVehicle selectedVehicleId={selectedVehicleId}/>
+          </Paper>
+        </Grid>
+        {/* Vehicles */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <Vehicles setSelectedVehicleId={setSelectedVehicleId} refresh={refresh} setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>
+        {/*Add Vehicle */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <AddVehicle setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>
+      </Grid>
+  }
+  if(selectedContent=='Add Vehicle'){
+    mainContent=
+      <Grid container spacing={3}>
+        {/* SelectedVehicle */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+          {/*<Paper className={fixedHeightPaper}>*/}
+            <SelectedVehicle selectedVehicleId={selectedVehicleId}/>
+          </Paper>
+        </Grid>
+
+        {/*Add Vehicle */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <AddVehicle setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>
+      </Grid>
+  }
+  if(selectedContent=='Services'){
+    mainContent=
+      <Grid container spacing={3}>
+        {/* SelectedVehicle */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+          {/*<Paper className={fixedHeightPaper}>*/}
+            <SelectedVehicle selectedVehicleId={selectedVehicleId}/>
+          </Paper>
+        </Grid>
+        {/*AddService */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <AddService setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>
+        {/*Services */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <Services refresh={refresh} setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>
+        
+      </Grid>
+  }
+  if(selectedContent=='Add Service'){
+    mainContent=
+      <Grid container spacing={3}>
+        {/* SelectedVehicle */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+          {/*<Paper className={fixedHeightPaper}>*/}
+            <SelectedVehicle selectedVehicleId={selectedVehicleId}/>
+          </Paper>
+        </Grid>
+        {/*AddService */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <AddService setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>       
+      </Grid>
+  }
 
   return (
     <div className={classes.root}>
@@ -142,12 +292,16 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
+            {selectedContent} 
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+          <Typography variant="h6" color="inherit">
+            {username} 
+          </Typography>
+          <IconButton color="inherit" onClick={()=>{localStorage.removeItem("token"); history.go(0);}}>
+            <Typography variant="body2" color="inherit">
+              Log Out
+            </Typography>
+            <ExitToAppIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -164,27 +318,68 @@ export default function Dashboard() {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        {/*list of menu items*/}
+        <List>
+          <ListItem button onClick={()=>{setselectedContent('Vehicles')}}>
+            <ListItemIcon>
+              <DirectionsCarIcon />
+            </ListItemIcon>
+            <ListItemText primary="Vehicles" />
+          </ListItem>
+          <ListItem button onClick={()=>{setselectedContent('Add Vehicle')}}>
+            <ListItemIcon>
+              <DirectionsCarOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add vehicle" />
+          </ListItem>
+          <Divider />
+          <ListItem button onClick={()=>{setselectedContent('Services')}}>
+            <ListItemIcon>
+              <LibraryBooksOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Services" />
+          </ListItem>
+          <ListItem button onClick={()=>{setselectedContent('Add Service')}}>
+            <ListItemIcon>
+              <LibraryAddOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add service" />
+          </ListItem>
+          <Divider />
+          <ListItem button>
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Next maintenances" />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <LibraryAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add maintenance" />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <LibraryBooksIcon />
+            </ListItemIcon>
+            <ListItemText primary="Maintenances" />
+          </ListItem>
+        </List>
         <Divider />
+        {/*
+        <ListItem button>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem>
         <List>{secondaryListItems}</List>
+        */}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
-            </Grid>
-          </Grid>
+          {mainContent}
           <Box pt={4}>
             <Copyright />
           </Box>
