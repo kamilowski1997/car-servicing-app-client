@@ -13,7 +13,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import Title from './Title';
 import MomentUtils from '@date-io/moment';
-import { moment } from 'moment';
+import moment from "moment";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function AddVehicle(props) {
+export default function ConfirmMaintenance(props) {
 //handling alerts
   const [openSuccesAlert, setOpenSuccesAlert] = React.useState(false);
   const [openErrorAlert, setOpenErrorAlert] = React.useState(false);
@@ -50,28 +50,24 @@ export default function AddVehicle(props) {
     setOpenErrorAlert(false);
   };
 //date
-  const [selectedProductionDate, setSelectedProductionDate] = useState(null);
-  const handleProductionDateChange = (date) => {
-    setSelectedProductionDate(date);
+  const [selectedDate, setSelectedDate] = useState(moment());
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
 
 //api
   const server = 'http://localhost:3001';
-  const addVehicle = (name, mileage, brand, model, production_date, vin, color) => {
-    return fetch(`${server}/api/addVehicle`, {
+  const confirmMaintenance = (id, done_date, done_mileage) => {
+    return fetch(`${server}/api/confirmMaintenance`, {
       method: "POST",
       body: JSON.stringify({
-        name, 
-        mileage, 
-        brand, 
-        model, 
-        production_date, 
-        vin, 
-        color
+        done_date, 
+        done_mileage, 
       }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem('token'),
+        nextMaintenanceId: id,
       },
     }).then((res) => {
       if (!res.error) {
@@ -85,26 +81,13 @@ export default function AddVehicle(props) {
 
   const onSubmit = async(event)=>{
     event.preventDefault();
-
     try {
-      let res;
-      
-      if(selectedProductionDate == null){
-        res = await addVehicle(event.target.name.value, event.target.mileage.value, event.target.brand.value, event.target.model.value, 
-          selectedProductionDate, event.target.vin.value, event.target.color.value);
-      }else{
-        res = await addVehicle(event.target.name.value, event.target.mileage.value, event.target.brand.value, event.target.model.value, 
-          selectedProductionDate.format('YYYY-MM-DD'), event.target.vin.value, event.target.color.value);
-      }
-
+      const res = await confirmMaintenance(props.nextMaintenanceId, moment(selectedDate).format('YYYY-MM-DD'), event.target.done_mileage.value);
+      console.log(res)
       if(res.status===200){
         setOpenSuccesAlert(true);
         props.setRefresh(true);
       }
-      //localStorage.setItem('token', token);
-      //history.go(0)
-      //history.push('/');s
-      
     } catch (error) {
       console.error(error);
       setOpenErrorAlert(true);
@@ -114,62 +97,49 @@ export default function AddVehicle(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Add Vehicle</Title>
+      <Title>Confirm maintenance</Title>
       <form onSubmit={onSubmit} noValidate autoComplete="off">  
         <Grid container spacing={2}>
-          <Grid item xs={3} container justify='center'>
-            <TextField id="name" name="name" label="Name" variant="outlined" required/>
-          </Grid>
-          <Grid item xs={3} container justify='center'>
-            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" required/>
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="brand" name="brand" label="Brand" variant="outlined" />
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="model" name="model" label="Model" variant="outlined" />
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
+          <Grid item md={4} container>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <KeyboardDatePicker
                 margin="normal"
-                id="production_date"
-                label="Production Date"
+                id="date"
+                label="Done maintenance date"
+                style={{width:"100%", margin:"5px"}} 
                 format="DD/MM/YYYY"
-                value={selectedProductionDate}
-                onChange={handleProductionDateChange}
+                value={selectedDate}
+                onChange={handleDateChange}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </MuiPickersUtilsProvider>
           </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="vin" name="vin" label="Vin" variant="outlined" />
+          <Grid item md={4} container>
+            <TextField id="done_mileage" name="done_mileage" label="Done mileage" variant="outlined" defaultValue={props.selectedVehicle.mileage} required style={{width:"100%", margin:"5px"}} />
           </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="color" name="color" label="Color" variant="outlined" />
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
+          <Grid item md={4} container justify='center' >
             <Button
-              fullWidth
+              style={{width:"100%", margin:"5px"}} 
               type="submit"
               variant="contained"
               color="primary"
             >
-              Add
+              Confirm
             </Button>
           </Grid> 
         </Grid>      
       </form>
       <Snackbar open={openSuccesAlert} autoHideDuration={6000} onClose={handleCloseSuccesAlert}>
         <Alert onClose={handleCloseSuccesAlert} severity="success">
-          Added Vehicle!
+          Confirmed maintenance!
         </Alert>
       </Snackbar>
       <Snackbar open={openErrorAlert} autoHideDuration={6000} onClose={handleCloseErrorAlert}>
         <Alert onClose={handleCloseErrorAlert} severity="error">
-          Error adding vehicle, please try again.
+          Error confirming maintenance, please try again.
         </Alert>
       </Snackbar>
     </React.Fragment>

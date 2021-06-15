@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
 import Title from './Title';
-import AddService from './AddService';
-import EditService from './EditService';
-
+import EditMaintenance from './EditMaintenance';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -19,7 +15,6 @@ import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
-import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
@@ -72,7 +67,7 @@ function Row(props) {
 
                 <Grid item xs={12} container>
                   <Paper>
-                    <EditService row={row} serviceId={row.id} setRefresh={props.setRefresh}/>
+                    <EditMaintenance row={row} maintenanceId={row.id} setRefresh={props.setRefresh}/>
                   </Paper>
                 </Grid>
               </Grid>
@@ -92,27 +87,27 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function Services(props) {
+export default function Maintenances(props) {
 
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [services, setServices] = useState(false);
+  const [maintenances, setMaintenances] = useState(false);
 
   const server = 'http://localhost:3001';
 
   useEffect(() =>{
-    if(!services){
-      getServices();
+    if(!maintenances){
+      getMaintenances();
     }
     if(props.refresh){
-        getServices();
+      getMaintenances();
       props.setRefresh(false);
     }
   });
 
-  const getServices = async()=>{
+  const getMaintenances = async()=>{
     setToken(localStorage.getItem('token'));
 
-    fetch(`${server}/api/getServices`, {
+    fetch(`${server}/api/getMaintenances`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem('token'),
         selectedVehicleId: localStorage.getItem('selectedVehicleId'),
@@ -121,9 +116,8 @@ export default function Services(props) {
       .then((res) => {
         return res.json();
       })
-      .then((services) => {
-        setServices(services);
-        console.log(services);
+      .then((maintenances) => {
+        setMaintenances(maintenances);
       })
       .catch((err) => {
         console.log(err);
@@ -133,8 +127,8 @@ export default function Services(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Services</Title>
-      {services?
+      <Title>Maintenances</Title>
+      {maintenances?
       <Table size="small" aria-label="collapsible table">
         <TableHead>
           <TableRow>
@@ -145,7 +139,7 @@ export default function Services(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {services.map((row) => (
+          {maintenances.map((row) => (
             <Row key={row.id} row={row} setRefresh={props.setRefresh} />
           ))}
         </TableBody>

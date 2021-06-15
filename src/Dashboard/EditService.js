@@ -13,7 +13,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import Title from './Title';
 import MomentUtils from '@date-io/moment';
-import { moment } from 'moment';
+import moment from "moment";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -50,7 +50,7 @@ export default function EditService(props) {
     setOpenErrorAlert(false);
   };
 //date
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(props.row.date);
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -58,7 +58,7 @@ export default function EditService(props) {
 //api
   const server = 'http://localhost:3001';
   const editService = (id, name, date, mileage, description) => {
-    return fetch(`${server}/api/EditService`, {
+    return fetch(`${server}/api/editService`, {
       method: "POST",
       body: JSON.stringify({
         name, 
@@ -81,7 +81,7 @@ export default function EditService(props) {
     });
   };
   const deleteServ = (id) => {
-    return fetch(`${server}/api/DeleteService`, {
+    return fetch(`${server}/api/deleteService`, {
       method: "POST",
       body: JSON.stringify({}),
       headers: {
@@ -113,7 +113,7 @@ export default function EditService(props) {
   const onSubmit = async(event)=>{
     event.preventDefault();
     try {
-      const res = await editService(props.serviceId, event.target.name.value, selectedDate.format('YYYY-MM-DD'), event.target.mileage.value, 
+      const res = await editService(props.serviceId, event.target.name.value, moment(selectedDate).format('YYYY-MM-DD'), event.target.mileage.value, 
         event.target.description.value);
       console.log(res)
       if(res.status===200){
@@ -152,22 +152,23 @@ export default function EditService(props) {
               <KeyboardDatePicker
                 margin="normal"
                 id="date"
-                label="Date picker dialog"
+                label="Service Date"
                 format="DD/MM/YYYY"
                 value={selectedDate}
                 onChange={handleDateChange}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </MuiPickersUtilsProvider>
           </Grid> 
           <Grid item md={3} container justify='center'>
-            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" required/>
+            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" defaultValue={props.row.mileage} required/>
           </Grid> 
           
           <Grid item md={9} container justify='center'>
-            <TextField id="description" name="description" label="Description" variant="outlined" fullWidth />
+            <TextField id="description" name="description" label="Description" variant="outlined" defaultValue={props.row.description} fullWidth />
           </Grid> 
           <Grid item md={3} container justify='center'>
             <Button

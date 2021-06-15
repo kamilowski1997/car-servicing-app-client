@@ -58,7 +58,7 @@ export default function AddService(props) {
 //api
   const server = 'http://localhost:3001';
   const addService = (name, date, mileage, description) => {
-    return fetch(`${server}/api/AddService`, {
+    return fetch(`${server}/api/addService`, {
       method: "POST",
       body: JSON.stringify({
         name, 
@@ -116,13 +116,14 @@ export default function AddService(props) {
               <KeyboardDatePicker
                 margin="normal"
                 id="date"
-                label="Date picker dialog"
+                label="Service Date"
                 format="DD/MM/YYYY"
                 value={selectedDate}
                 onChange={handleDateChange}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </MuiPickersUtilsProvider>
           </Grid> 

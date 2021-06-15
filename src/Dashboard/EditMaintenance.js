@@ -13,7 +13,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import Title from './Title';
 import MomentUtils from '@date-io/moment';
-import { moment } from 'moment';
+import moment from "moment";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function AddVehicle(props) {
+export default function EditMaintenance(props) {
 //handling alerts
   const [openSuccesAlert, setOpenSuccesAlert] = React.useState(false);
   const [openErrorAlert, setOpenErrorAlert] = React.useState(false);
@@ -50,28 +50,26 @@ export default function AddVehicle(props) {
     setOpenErrorAlert(false);
   };
 //date
-  const [selectedProductionDate, setSelectedProductionDate] = useState(null);
-  const handleProductionDateChange = (date) => {
-    setSelectedProductionDate(date);
+  const [selectedDate, setSelectedDate] = useState(props.row.date);
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
 
 //api
   const server = 'http://localhost:3001';
-  const addVehicle = (name, mileage, brand, model, production_date, vin, color) => {
-    return fetch(`${server}/api/addVehicle`, {
+  const editMaintenance = (id, name, date, mileage, description) => {
+    return fetch(`${server}/api/editMaintenance`, {
       method: "POST",
       body: JSON.stringify({
         name, 
+        date, 
         mileage, 
-        brand, 
-        model, 
-        production_date, 
-        vin, 
-        color
+        description,
       }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem('token'),
+        maintenanceId: id,
       },
     }).then((res) => {
       if (!res.error) {
@@ -82,29 +80,45 @@ export default function AddVehicle(props) {
       }
     });
   };
+  const deleteMainten = (id) => {
+    return fetch(`${server}/api/deleteMaintenance`, {
+      method: "POST",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem('token'),
+        maintenanceId: id,
+      },
+    }).then((res) => {
+      if (!res.error) {
+        return res;
+      } else {
+        const error = new Error(res.error);
+        throw error;
+      }
+    });
+  };
+  const deleteMaintenance = async(id)=>{
+    try {
+      const res = await deleteMainten(id);
+      if(res.status===200){
+        props.setRefresh(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const onSubmit = async(event)=>{
     event.preventDefault();
-
     try {
-      let res;
-      
-      if(selectedProductionDate == null){
-        res = await addVehicle(event.target.name.value, event.target.mileage.value, event.target.brand.value, event.target.model.value, 
-          selectedProductionDate, event.target.vin.value, event.target.color.value);
-      }else{
-        res = await addVehicle(event.target.name.value, event.target.mileage.value, event.target.brand.value, event.target.model.value, 
-          selectedProductionDate.format('YYYY-MM-DD'), event.target.vin.value, event.target.color.value);
-      }
-
+      const res = await editMaintenance(props.maintenanceId, event.target.name.value, moment(selectedDate).format('YYYY-MM-DD'), event.target.mileage.value, 
+        event.target.description.value);
+      console.log(res)
       if(res.status===200){
         setOpenSuccesAlert(true);
         props.setRefresh(true);
       }
-      //localStorage.setItem('token', token);
-      //history.go(0)
-      //history.push('/');s
-      
     } catch (error) {
       console.error(error);
       setOpenErrorAlert(true);
@@ -114,62 +128,67 @@ export default function AddVehicle(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Add Vehicle</Title>
+      <Title>Edit maintenance</Title>
       <form onSubmit={onSubmit} noValidate autoComplete="off">  
         <Grid container spacing={2}>
-          <Grid item xs={3} container justify='center'>
-            <TextField id="name" name="name" label="Name" variant="outlined" required/>
+          <Grid item xs={9}>
+          </Grid> 
+          <Grid item md={3} container justify='flex-end'>
+            <Button
+              size='small'
+              variant="outlined"
+              color="secondary"
+              onClick={()=>{deleteMaintenance(props.row.id);}}
+            >
+              Delete
+            </Button>
+          </Grid> 
+          <Grid item md={3} container justify='center'>
+            <TextField id="name" name="name" label="Name" variant="outlined" defaultValue={props.row.name} required/>
           </Grid>
-          <Grid item xs={3} container justify='center'>
-            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" required/>
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="brand" name="brand" label="Brand" variant="outlined" />
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="model" name="model" label="Model" variant="outlined" />
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
+          <Grid item md={3} container justify='center'>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <KeyboardDatePicker
                 margin="normal"
-                id="production_date"
-                label="Production Date"
+                id="date"
+                label="Maintenance Date"
                 format="DD/MM/YYYY"
-                value={selectedProductionDate}
-                onChange={handleProductionDateChange}
+                value={selectedDate}
+                onChange={handleDateChange}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </MuiPickersUtilsProvider>
           </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="vin" name="vin" label="Vin" variant="outlined" />
+          <Grid item md={3} container justify='center'>
+            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" defaultValue={props.row.mileage} required/>
           </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="color" name="color" label="Color" variant="outlined" />
+          
+          <Grid item md={9} container justify='center'>
+            <TextField id="description" name="description" label="Description" variant="outlined" defaultValue={props.row.description} fullWidth />
           </Grid> 
-          <Grid item xs={3} container justify='center'>
+          <Grid item md={3} container justify='center'>
             <Button
               fullWidth
               type="submit"
               variant="contained"
               color="primary"
             >
-              Add
+              Edit
             </Button>
           </Grid> 
         </Grid>      
       </form>
       <Snackbar open={openSuccesAlert} autoHideDuration={6000} onClose={handleCloseSuccesAlert}>
         <Alert onClose={handleCloseSuccesAlert} severity="success">
-          Added Vehicle!
+          Edited maintenance!
         </Alert>
       </Snackbar>
       <Snackbar open={openErrorAlert} autoHideDuration={6000} onClose={handleCloseErrorAlert}>
         <Alert onClose={handleCloseErrorAlert} severity="error">
-          Error adding vehicle, please try again.
+          Error editing maintenance, please try again.
         </Alert>
       </Snackbar>
     </React.Fragment>

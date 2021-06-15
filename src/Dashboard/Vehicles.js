@@ -90,7 +90,7 @@ export default function Vehicles(props) {
           {vehicles.map((row) => (
             <TableRow key={row.id}>
               <TableCell>
-                <Button variant="contained" color="primary" size="small" onClick={()=>{localStorage.setItem('selectedVehicleId', row.id);props.setSelectedVehicleId(row.id);}}>
+                <Button variant="outlined" color="primary" size="small" onClick={()=>{localStorage.setItem('selectedVehicleId', row.id);props.setSelectedVehicleId(row.id);}}>
                   Select
                 </Button>
               </TableCell>

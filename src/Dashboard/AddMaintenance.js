@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function AddVehicle(props) {
+export default function AddMaintenance(props) {
 //handling alerts
   const [openSuccesAlert, setOpenSuccesAlert] = React.useState(false);
   const [openErrorAlert, setOpenErrorAlert] = React.useState(false);
@@ -50,28 +50,26 @@ export default function AddVehicle(props) {
     setOpenErrorAlert(false);
   };
 //date
-  const [selectedProductionDate, setSelectedProductionDate] = useState(null);
-  const handleProductionDateChange = (date) => {
-    setSelectedProductionDate(date);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
 
 //api
   const server = 'http://localhost:3001';
-  const addVehicle = (name, mileage, brand, model, production_date, vin, color) => {
-    return fetch(`${server}/api/addVehicle`, {
+  const addMaintenance = (name, date, mileage, description) => {
+    return fetch(`${server}/api/addMaintenance`, {
       method: "POST",
       body: JSON.stringify({
         name, 
+        date, 
         mileage, 
-        brand, 
-        model, 
-        production_date, 
-        vin, 
-        color
+        description,
       }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem('token'),
+        selectedVehicleId: localStorage.getItem('selectedVehicleId'),
       },
     }).then((res) => {
       if (!res.error) {
@@ -87,16 +85,9 @@ export default function AddVehicle(props) {
     event.preventDefault();
 
     try {
-      let res;
-      
-      if(selectedProductionDate == null){
-        res = await addVehicle(event.target.name.value, event.target.mileage.value, event.target.brand.value, event.target.model.value, 
-          selectedProductionDate, event.target.vin.value, event.target.color.value);
-      }else{
-        res = await addVehicle(event.target.name.value, event.target.mileage.value, event.target.brand.value, event.target.model.value, 
-          selectedProductionDate.format('YYYY-MM-DD'), event.target.vin.value, event.target.color.value);
-      }
-
+      const res = await addMaintenance(event.target.name.value, selectedDate.format('YYYY-MM-DD'), event.target.mileage.value, 
+        event.target.description.value);
+      console.log(res)
       if(res.status===200){
         setOpenSuccesAlert(true);
         props.setRefresh(true);
@@ -114,41 +105,33 @@ export default function AddVehicle(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Add Vehicle</Title>
+      <Title>Add maintenance to history</Title>
       <form onSubmit={onSubmit} noValidate autoComplete="off">  
         <Grid container spacing={2}>
           <Grid item xs={3} container justify='center'>
             <TextField id="name" name="name" label="Name" variant="outlined" required/>
           </Grid>
           <Grid item xs={3} container justify='center'>
-            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" required/>
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="brand" name="brand" label="Brand" variant="outlined" />
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="model" name="model" label="Model" variant="outlined" />
-          </Grid> 
-          <Grid item xs={3} container justify='center'>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <KeyboardDatePicker
                 margin="normal"
-                id="production_date"
-                label="Production Date"
+                id="date"
+                label="Maintenance Date"
                 format="DD/MM/YYYY"
-                value={selectedProductionDate}
-                onChange={handleProductionDateChange}
+                value={selectedDate}
+                onChange={handleDateChange}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
+                required
               />
             </MuiPickersUtilsProvider>
           </Grid> 
           <Grid item xs={3} container justify='center'>
-            <TextField id="vin" name="vin" label="Vin" variant="outlined" />
+            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" required/>
           </Grid> 
-          <Grid item xs={3} container justify='center'>
-            <TextField id="color" name="color" label="Color" variant="outlined" />
+          <Grid item xs={9} container justify='center'>
+            <TextField id="description" name="description" label="Description" variant="outlined" fullWidth />
           </Grid> 
           <Grid item xs={3} container justify='center'>
             <Button
@@ -164,12 +147,12 @@ export default function AddVehicle(props) {
       </form>
       <Snackbar open={openSuccesAlert} autoHideDuration={6000} onClose={handleCloseSuccesAlert}>
         <Alert onClose={handleCloseSuccesAlert} severity="success">
-          Added Vehicle!
+          Added maintenance!
         </Alert>
       </Snackbar>
       <Snackbar open={openErrorAlert} autoHideDuration={6000} onClose={handleCloseErrorAlert}>
         <Alert onClose={handleCloseErrorAlert} severity="error">
-          Error adding vehicle, please try again.
+          Error adding maintenance, please try again.
         </Alert>
       </Snackbar>
     </React.Fragment>

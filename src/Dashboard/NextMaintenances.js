@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
 import Title from './Title';
-import AddService from './AddService';
-import EditService from './EditService';
-
+import ConfirmMaintenance from './ConfirmMaintenance';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -19,7 +15,6 @@ import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
-import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
@@ -49,6 +44,8 @@ function Row(props) {
         </TableCell>
         <TableCell >{row.date}</TableCell>
         <TableCell >{row.mileage}</TableCell>
+        <TableCell >{row.time_interval}</TableCell>
+        <TableCell >{row.mileage_interval}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -68,11 +65,10 @@ function Row(props) {
                         </div>
                     </Grid>
                   </Paper>
-                </Grid>
-
+                </Grid>                
                 <Grid item xs={12} container>
-                  <Paper>
-                    <EditService row={row} serviceId={row.id} setRefresh={props.setRefresh}/>
+                  <Paper style={{width:"80%"}}  >
+                    <ConfirmMaintenance row={row} maintenanceId={row.id} setRefresh={props.setRefresh} selectedVehicle={props.selectedVehicle}/>
                   </Paper>
                 </Grid>
               </Grid>
@@ -92,27 +88,27 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function Services(props) {
+export default function NextMaintenances(props) {
 
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [services, setServices] = useState(false);
+  const [nextMaintenances, setNextMaintenances] = useState(false);
 
   const server = 'http://localhost:3001';
 
   useEffect(() =>{
-    if(!services){
-      getServices();
+    if(!nextMaintenances){
+      getNextMaintenances();
     }
     if(props.refresh){
-        getServices();
+      getNextMaintenances();
       props.setRefresh(false);
     }
   });
 
-  const getServices = async()=>{
+  const getNextMaintenances = async()=>{
     setToken(localStorage.getItem('token'));
 
-    fetch(`${server}/api/getServices`, {
+    fetch(`${server}/api/getNextMaintenances`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem('token'),
         selectedVehicleId: localStorage.getItem('selectedVehicleId'),
@@ -121,9 +117,8 @@ export default function Services(props) {
       .then((res) => {
         return res.json();
       })
-      .then((services) => {
-        setServices(services);
-        console.log(services);
+      .then((nextMaintenances) => {
+        setNextMaintenances(nextMaintenances);
       })
       .catch((err) => {
         console.log(err);
@@ -133,8 +128,8 @@ export default function Services(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Services</Title>
-      {services?
+      <Title>Next Maintenances</Title>
+      {nextMaintenances?
       <Table size="small" aria-label="collapsible table">
         <TableHead>
           <TableRow>
@@ -142,11 +137,13 @@ export default function Services(props) {
             <TableCell>Name</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Mileage</TableCell>
+            <TableCell>Time interval (months)</TableCell>
+            <TableCell>Mileage interval</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {services.map((row) => (
-            <Row key={row.id} row={row} setRefresh={props.setRefresh} />
+          {nextMaintenances.map((row) => (
+            <Row key={row.id} row={row} setRefresh={props.setRefresh} selectedVehicle={props.selectedVehicle} />
           ))}
         </TableBody>
       </Table>
