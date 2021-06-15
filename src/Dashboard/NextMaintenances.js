@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
 import ConfirmMaintenance from './ConfirmMaintenance';
+import moment from "moment";
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -42,7 +43,7 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell >{row.date}</TableCell>
+        <TableCell >{moment(row.date).format('DD.MM.YYYY')}</TableCell>
         <TableCell >{row.mileage}</TableCell>
         <TableCell >{row.time_interval}</TableCell>
         <TableCell >{row.mileage_interval}</TableCell>
@@ -68,7 +69,7 @@ function Row(props) {
                 </Grid>                
                 <Grid item xs={12} container>
                   <Paper style={{width:"80%"}}  >
-                    <ConfirmMaintenance row={row} maintenanceId={row.id} setRefresh={props.setRefresh} selectedVehicle={props.selectedVehicle}/>
+                    <ConfirmMaintenance row={row} nextMaintenanceId={row.id} setRefresh={props.setRefresh} selectedVehicle={props.selectedVehicle}/>
                   </Paper>
                 </Grid>
               </Grid>

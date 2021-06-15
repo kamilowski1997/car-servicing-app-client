@@ -135,7 +135,7 @@ export default function AddVehicle(props) {
                 margin="normal"
                 id="production_date"
                 label="Production Date"
-                format="DD/MM/YYYY"
+                format="DD.MM.YYYY"
                 value={selectedProductionDate}
                 onChange={handleProductionDateChange}
                 KeyboardButtonProps={{

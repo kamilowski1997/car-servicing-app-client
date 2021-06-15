@@ -117,7 +117,7 @@ export default function AddService(props) {
                 margin="normal"
                 id="date"
                 label="Service Date"
-                format="DD/MM/YYYY"
+                format="DD.MM.YYYY"
                 value={selectedDate}
                 onChange={handleDateChange}
                 KeyboardButtonProps={{

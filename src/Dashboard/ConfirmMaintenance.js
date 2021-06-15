@@ -82,6 +82,7 @@ export default function ConfirmMaintenance(props) {
   const onSubmit = async(event)=>{
     event.preventDefault();
     try {
+      console.log(props.nextMaintenanceId)
       const res = await confirmMaintenance(props.nextMaintenanceId, moment(selectedDate).format('YYYY-MM-DD'), event.target.done_mileage.value);
       console.log(res)
       if(res.status===200){

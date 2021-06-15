@@ -8,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Title from './Title';
+import moment from "moment";
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
@@ -99,7 +100,7 @@ export default function Vehicles(props) {
               <TableCell>{row.mileage}</TableCell>
               <TableCell>{row.brand}</TableCell>
               <TableCell>{row.model}</TableCell>
-              <TableCell>{row.production_date}</TableCell>
+              <TableCell>{moment(row.production_date).format('DD.MM.YYYY')}</TableCell>
               <TableCell>{row.vin}</TableCell>
               <TableCell>{row.color}</TableCell>
             </TableRow>

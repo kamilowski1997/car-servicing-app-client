@@ -152,7 +152,7 @@ export default function EditMaintenance(props) {
                 margin="normal"
                 id="date"
                 label="Maintenance Date"
-                format="DD/MM/YYYY"
+                format="DD.MM.YYYY"
                 value={selectedDate}
                 onChange={handleDateChange}
                 KeyboardButtonProps={{

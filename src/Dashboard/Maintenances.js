@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
 import EditMaintenance from './EditMaintenance';
+import moment from "moment";
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -42,7 +43,7 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell >{row.date}</TableCell>
+        <TableCell >{moment(row.date).format('DD.MM.YYYY')}</TableCell>
         <TableCell >{row.mileage}</TableCell>
       </TableRow>
       <TableRow>

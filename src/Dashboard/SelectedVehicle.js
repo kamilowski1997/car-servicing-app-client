@@ -149,7 +149,7 @@ export default function SelectedVehicle(props) {
                         margin="normal"
                         id="production_date_picker"
                         label="Production Date"
-                        format="DD/MM/YYYY"
+                        format="DD.MM.YYYY"
                         value={selectedProductionDate}
                         onChange={handleProductionDateChange}
                         KeyboardButtonProps={{
@@ -193,7 +193,7 @@ export default function SelectedVehicle(props) {
                 model: {selectedVehicle.model}
               </Typography>
               <Typography color="textSecondary" className={classes.depositContext}>
-                production_date: {selectedVehicle.production_date}
+                production_date: {moment(selectedVehicle.production_date).format('DD.MM.YYYY')}
               </Typography>
               <Typography color="textSecondary" className={classes.depositContext}>
                 vin: {selectedVehicle.vin}
