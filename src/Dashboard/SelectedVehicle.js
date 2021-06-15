@@ -103,7 +103,6 @@ export default function SelectedVehicle(props) {
   };
   const editVehicle = async(event)=>{
     event.preventDefault();
-    alert("sacvascv");
     try {
       const res = await editVehicl(props.selectedVehicleId, event.target.nameTF.value, event.target.mileageTF.value, event.target.brandTF.value, event.target.modelTF.value,
         moment(selectedProductionDate).format('YYYY-MM-DD'), event.target.vinTF.value, event.target.colorTF.value);
@@ -111,6 +110,7 @@ export default function SelectedVehicle(props) {
       console.log(res)
       if(res.status===200){
         props.setRefresh(true);
+        setIsEditing(false);
       }
     } catch (error) {
       console.error(error);
