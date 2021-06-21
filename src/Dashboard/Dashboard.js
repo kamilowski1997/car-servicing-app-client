@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { secondaryListItems } from './listItems';
 import SelectedVehicle from './SelectedVehicle';
 import Vehicles from './Vehicles';
 import { useHistory} from "react-router-dom";
@@ -16,14 +15,11 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -32,21 +28,16 @@ import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
 import DirectionsCarOutlinedIcon from '@material-ui/icons/DirectionsCarOutlined';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
 import AddVehicle from './AddVehicle';
 import Services from './Services';
 import AddService from './AddService';
 import Maintenances from './Maintenances';
 import AddMaintenance from './AddMaintenance';
 import NextMaintenances from './NextMaintenances';
+import AddNextMaintenance from './AddNextMaintenance';
 
 function Copyright() {
   return (
@@ -169,7 +160,6 @@ export default function Dashboard() {
       },
     })
       .then((res) => {
-        //console.log(res)
         return res.json();
       })
       .then((data) => {
@@ -181,7 +171,6 @@ export default function Dashboard() {
   };
 
   const history = useHistory();
-
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -199,7 +188,6 @@ export default function Dashboard() {
         {/* SelectedVehicle */}
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-          {/*<Paper className={fixedHeightPaper}>*/}
             <SelectedVehicle selectedVehicleId={selectedVehicleId} refresh={refresh} setRefresh={setRefresh} setSelectedVehicle={setSelectedVehicle}/>
           </Paper>
         </Grid>
@@ -223,7 +211,6 @@ export default function Dashboard() {
         {/* SelectedVehicle */}
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-          {/*<Paper className={fixedHeightPaper}>*/}
             <SelectedVehicle selectedVehicleId={selectedVehicleId} refresh={refresh} setRefresh={setRefresh} setSelectedVehicle={setSelectedVehicle}/>
           </Paper>
         </Grid>
@@ -242,7 +229,6 @@ export default function Dashboard() {
         {/* SelectedVehicle */}
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-          {/*<Paper className={fixedHeightPaper}>*/}
             <SelectedVehicle selectedVehicleId={selectedVehicleId} refresh={refresh} setRefresh={setRefresh} setSelectedVehicle={setSelectedVehicle}/>
           </Paper>
         </Grid>
@@ -258,7 +244,6 @@ export default function Dashboard() {
             <Services refresh={refresh} setRefresh={setRefresh}/>
           </Paper>
         </Grid>
-        
       </Grid>
   }
   if(selectedContent=='Add Service'){
@@ -267,7 +252,6 @@ export default function Dashboard() {
         {/* SelectedVehicle */}
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-          {/*<Paper className={fixedHeightPaper}>*/}
             <SelectedVehicle selectedVehicleId={selectedVehicleId} refresh={refresh} setRefresh={setRefresh} setSelectedVehicle={setSelectedVehicle}/>
           </Paper>
         </Grid>
@@ -285,7 +269,6 @@ export default function Dashboard() {
         {/* SelectedVehicle */}
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-          {/*<Paper className={fixedHeightPaper}>*/}
             <SelectedVehicle selectedVehicleId={selectedVehicleId} refresh={refresh} setRefresh={setRefresh} setSelectedVehicle={setSelectedVehicle}/>
           </Paper>
         </Grid>
@@ -311,16 +294,44 @@ export default function Dashboard() {
         {/* SelectedVehicle */}
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-          {/*<Paper className={fixedHeightPaper}>*/}
             <SelectedVehicle selectedVehicleId={selectedVehicleId} refresh={refresh} setRefresh={setRefresh} setSelectedVehicle={setSelectedVehicle}/>
           </Paper>
         </Grid>
+        {/*AddNextMaintenance */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <AddNextMaintenance setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>  
         {/*NextMaintenances */}
         <Grid item xs={12}>
           <Paper className={classes.paper}>
             <NextMaintenances refresh={refresh} setRefresh={setRefresh} selectedVehicle={selectedVehicle}/>
           </Paper>
         </Grid>
+      </Grid>
+  }
+  if(selectedContent=='Add maintenance'){
+    mainContent=
+      <Grid container spacing={3}>
+        {/* SelectedVehicle */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <SelectedVehicle selectedVehicleId={selectedVehicleId} refresh={refresh} setRefresh={setRefresh} setSelectedVehicle={setSelectedVehicle}/>
+          </Paper>
+        </Grid>
+        {/*AddNextMaintenance */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <AddNextMaintenance setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>  
+        {/*AddMaintenance */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <AddMaintenance setRefresh={setRefresh}/>
+          </Paper>
+        </Grid>       
       </Grid>
   }
 
@@ -399,7 +410,7 @@ export default function Dashboard() {
             </ListItemIcon>
             <ListItemText primary="Next maintenances" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={()=>{setselectedContent('Add maintenance')}}>
             <ListItemIcon>
               <LibraryAddIcon />
             </ListItemIcon>
@@ -413,15 +424,6 @@ export default function Dashboard() {
           </ListItem>
         </List>
         <Divider />
-        {/*
-        <ListItem button>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
-        <List>{secondaryListItems}</List>
-        */}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

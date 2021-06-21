@@ -6,9 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
 import Title from './Title';
-import AddService from './AddService';
 import EditService from './EditService';
 import moment from "moment";
 
@@ -19,7 +17,6 @@ import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
-import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
@@ -84,14 +81,6 @@ function Row(props) {
   );
 }
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-
-}));
-
 export default function Services(props) {
 
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -130,7 +119,6 @@ export default function Services(props) {
       });
   };
 
-  const classes = useStyles();
   return (
     <React.Fragment>
       <Title>Services</Title>

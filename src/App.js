@@ -2,7 +2,7 @@ import './App.css';
 import SignUp from './SignUp';
 import MainPage from './MainPage'
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NotFoundPage from './404.js'
 import {
   BrowserRouter as Router,
@@ -11,8 +11,6 @@ import {
   Link, 
   Redirect
 } from "react-router-dom";
-
-
 
 function App() {
 

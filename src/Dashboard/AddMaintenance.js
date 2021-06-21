@@ -24,14 +24,6 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-
-}));
-
 export default function AddMaintenance(props) {
 //handling alerts
   const [openSuccesAlert, setOpenSuccesAlert] = React.useState(false);
@@ -91,18 +83,13 @@ export default function AddMaintenance(props) {
       if(res.status===200){
         setOpenSuccesAlert(true);
         props.setRefresh(true);
-      }
-      //localStorage.setItem('token', token);
-      //history.go(0)
-      //history.push('/');s
-      
+      }      
     } catch (error) {
       console.error(error);
       setOpenErrorAlert(true);
     }
   }
 
-  const classes = useStyles();
   return (
     <React.Fragment>
       <Title>Add maintenance to history</Title>

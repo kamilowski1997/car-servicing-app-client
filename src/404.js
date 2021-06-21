@@ -1,5 +1,4 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 
 class NotFoundPage extends React.Component{
     render(){
@@ -9,7 +8,6 @@ class NotFoundPage extends React.Component{
             </div>
         );
     };
-
 }
 
 export default NotFoundPage;

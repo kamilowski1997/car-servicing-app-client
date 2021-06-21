@@ -6,6 +6,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
+import EditNextMaintenance from './EditNextMaintenance'
 import ConfirmMaintenance from './ConfirmMaintenance';
 import moment from "moment";
 
@@ -34,8 +35,17 @@ function Row(props) {
   const [rowColor, setRowColor] = useState('white');
   
   useEffect(()=>{
-    if(row.mileage<props.selectedVehicle.mileage){
+    const rowDate = new Date(row.date);
+    const today = new Date();
+    const nextWeek = Date.parse(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7));
+    const nextMileage = parseInt(props.selectedVehicle.mileage) + 1000;
+
+    if(parseInt(row.mileage)<=parseInt(props.selectedVehicle.mileage) || rowDate<=today){
       setRowColor('#e37b7b');
+    }else if(parseInt(row.mileage)< nextMileage || rowDate<nextWeek){
+      setRowColor('#e6d863');
+    }else{
+      setRowColor('white');
     }
   });
 
@@ -79,6 +89,11 @@ function Row(props) {
                     <ConfirmMaintenance row={row} nextMaintenanceId={row.id} setRefresh={props.setRefresh} selectedVehicle={props.selectedVehicle}/>
                   </Paper>
                 </Grid>
+                <Grid item xs={12} container>
+                  <Paper>
+                    <EditNextMaintenance row={row} nextMaintenanceId={row.id} setRefresh={props.setRefresh}/>
+                  </Paper>
+                </Grid>
               </Grid>
             </Box>
           </Collapse>
@@ -87,14 +102,6 @@ function Row(props) {
     </React.Fragment>
   );
 }
-
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-
-}));
 
 export default function NextMaintenances(props) {
 
@@ -133,7 +140,6 @@ export default function NextMaintenances(props) {
       });
   };
 
-  const classes = useStyles();
   return (
     <React.Fragment>
       <Title>Next Maintenances</Title>

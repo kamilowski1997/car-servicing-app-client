@@ -13,7 +13,6 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import Title from './Title';
 import MomentUtils from '@date-io/moment';
-import { moment } from 'moment';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -23,14 +22,6 @@ import {
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-
-}));
 
 export default function AddService(props) {
 //handling alerts
@@ -91,18 +82,13 @@ export default function AddService(props) {
       if(res.status===200){
         setOpenSuccesAlert(true);
         props.setRefresh(true);
-      }
-      //localStorage.setItem('token', token);
-      //history.go(0)
-      //history.push('/');s
-      
+      }      
     } catch (error) {
       console.error(error);
       setOpenErrorAlert(true);
     }
   }
 
-  const classes = useStyles();
   return (
     <React.Fragment>
       <Title>Add service</Title>

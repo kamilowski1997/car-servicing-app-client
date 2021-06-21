@@ -80,14 +80,6 @@ function Row(props) {
   );
 }
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-
-}));
-
 export default function Maintenances(props) {
 
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -125,7 +117,6 @@ export default function Maintenances(props) {
       });
   };
 
-  const classes = useStyles();
   return (
     <React.Fragment>
       <Title>Maintenances</Title>

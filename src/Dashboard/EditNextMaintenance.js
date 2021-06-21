@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField'
@@ -18,7 +18,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function EditMaintenance(props) {
+export default function EditNextMaintenance(props) {
 //handling alerts
   const [openSuccesAlert, setOpenSuccesAlert] = React.useState(false);
   const [openErrorAlert, setOpenErrorAlert] = React.useState(false);
@@ -43,19 +43,21 @@ export default function EditMaintenance(props) {
 
 //api
   const server = 'http://localhost:3001';
-  const editMaintenance = (id, name, date, mileage, description) => {
-    return fetch(`${server}/api/editMaintenance`, {
+  const editNextMaintenance = (id, name, date, mileage, time_interval, mileage_interval, description) => {
+    return fetch(`${server}/api/editNextMaintenance`, {
       method: "POST",
       body: JSON.stringify({
         name, 
         date, 
         mileage, 
+        time_interval,
+        mileage_interval,
         description,
       }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem('token'),
-        maintenanceId: id,
+        nextMaintenanceId: id,
       },
     }).then((res) => {
       if (!res.error) {
@@ -66,13 +68,14 @@ export default function EditMaintenance(props) {
       }
     });
   };
-  const deleteMainten = (id) => {
-    return fetch(`${server}/api/deleteMaintenance`, {
+
+  const deleteNextMainten = (id) => {
+    return fetch(`${server}/api/deleteNextMaintenance`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem('token'),
-        maintenanceId: id,
+        nextMaintenanceId: id,
       },
     }).then((res) => {
       if (!res.error) {
@@ -83,9 +86,10 @@ export default function EditMaintenance(props) {
       }
     });
   };
-  const deleteMaintenance = async(id)=>{
+
+  const deleteNextMaintenance = async(id)=>{
     try {
-      const res = await deleteMainten(id);
+      const res = await deleteNextMainten(id);
       if(res.status===200){
         props.setRefresh(true);
       }
@@ -97,8 +101,8 @@ export default function EditMaintenance(props) {
   const onSubmit = async(event)=>{
     event.preventDefault();
     try {
-      const res = await editMaintenance(props.maintenanceId, event.target.name.value, moment(selectedDate).format('YYYY-MM-DD'), event.target.mileage.value, 
-        event.target.description.value);
+      const res = await editNextMaintenance(props.nextMaintenanceId, event.target.name.value, moment(selectedDate).format('YYYY-MM-DD'), event.target.mileage.value, 
+      event.target.time_interval.value, event.target.mileage_interval.value, event.target.description.value);
       console.log(res)
       if(res.status===200){
         setOpenSuccesAlert(true);
@@ -112,7 +116,7 @@ export default function EditMaintenance(props) {
 
   return (
     <React.Fragment>
-      <Title>Edit maintenance</Title>
+      <Title>Edit next maintenance</Title>
       <form onSubmit={onSubmit} noValidate autoComplete="off">  
         <Grid container spacing={2}>
           <Grid item xs={9}>
@@ -122,7 +126,7 @@ export default function EditMaintenance(props) {
               size='small'
               variant="outlined"
               color="secondary"
-              onClick={()=>{deleteMaintenance(props.row.id);}}
+              onClick={()=>{deleteNextMaintenance(props.row.id);}}
             >
               Delete
             </Button>
@@ -135,7 +139,7 @@ export default function EditMaintenance(props) {
               <KeyboardDatePicker
                 margin="normal"
                 id="date"
-                label="Maintenance Date"
+                label="Next maintenance date"
                 format="DD.MM.YYYY"
                 value={selectedDate}
                 onChange={handleDateChange}
@@ -148,6 +152,12 @@ export default function EditMaintenance(props) {
           </Grid> 
           <Grid item md={3} container justify='center'>
             <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" defaultValue={props.row.mileage} required/>
+          </Grid> 
+          <Grid item md={3} container justify='center'>
+            <TextField id="time_interval" name="time_interval" label="Time interval" variant="outlined" defaultValue={props.row.time_interval} required/>
+          </Grid> 
+          <Grid item md={3} container justify='center'>
+            <TextField id="mileage_interval" name="mileage_interval" label="Mileage interval" variant="outlined" defaultValue={props.row.mileage_interval} required/>
           </Grid> 
           
           <Grid item md={9} container justify='center'>
@@ -167,12 +177,12 @@ export default function EditMaintenance(props) {
       </form>
       <Snackbar open={openSuccesAlert} autoHideDuration={6000} onClose={handleCloseSuccesAlert}>
         <Alert onClose={handleCloseSuccesAlert} severity="success">
-          Edited maintenance!
+          Edited next maintenance!
         </Alert>
       </Snackbar>
       <Snackbar open={openErrorAlert} autoHideDuration={6000} onClose={handleCloseErrorAlert}>
         <Alert onClose={handleCloseErrorAlert} severity="error">
-          Error editing maintenance, please try again.
+          Error editing next maintenance, please try again.
         </Alert>
       </Snackbar>
     </React.Fragment>

@@ -1,13 +1,6 @@
 import SignInSide from './SignInSide';
 import Dashboard from './Dashboard/Dashboard';
 import React, { useEffect, useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link, 
-  Redirect
-} from "react-router-dom";
 
 export default function MainPage() {
   
@@ -61,7 +54,7 @@ export default function MainPage() {
       mainPage = <Dashboard />
     }
   }
-  
+
   return(
     <div>
       {mainPage}
