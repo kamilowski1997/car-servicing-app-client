@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid';
@@ -70,10 +69,8 @@ export default function AddVehicle(props) {
 
   const onSubmit = async(event)=>{
     event.preventDefault();
-
     try {
       let res;
-      
       if(selectedProductionDate == null){
         res = await addVehicle(event.target.name.value, event.target.mileage.value, event.target.brand.value, event.target.model.value, 
           selectedProductionDate, event.target.vin.value, event.target.color.value);

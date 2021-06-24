@@ -10,7 +10,6 @@ import Button from '@material-ui/core/Button';
 import Title from './Title';
 import moment from "moment";
 
-
 export default function Vehicles(props) {
 
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -41,14 +40,13 @@ export default function Vehicles(props) {
       })
       .then((vehicles) => {
         setVehicles(vehicles);
-        console.log(vehicles);
+        //console.log(vehicles);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  //const classes = useStyles();
   return (
     <React.Fragment>
       <Title>Vehicles</Title>

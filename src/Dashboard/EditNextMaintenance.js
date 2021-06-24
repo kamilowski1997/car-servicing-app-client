@@ -151,7 +151,7 @@ export default function EditNextMaintenance(props) {
             </MuiPickersUtilsProvider>
           </Grid> 
           <Grid item md={3} container justify='center'>
-            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" defaultValue={props.row.mileage} required/>
+            <TextField id="mileage" name="mileage" label="Mileage" variant="outlined" defaultValue={props.rowMileage} required/>
           </Grid> 
           <Grid item md={3} container justify='center'>
             <TextField id="time_interval" name="time_interval" label="Time interval" variant="outlined" defaultValue={props.row.time_interval} required/>

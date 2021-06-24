@@ -61,10 +61,11 @@ export default function SelectedVehicle(props) {
         return res.json();
       })
       .then((vehicles) => {
-        setSelectedVehicle(vehicles[0]);
-        setSelectedProductionDate(vehicles[0].production_date);
-        props.setSelectedVehicle(vehicles[0]);
-        console.log(vehicles[0]);
+        if(vehicles.length != 0){
+          setSelectedVehicle(vehicles[0]);
+          setSelectedProductionDate(vehicles[0].production_date);
+          props.setSelectedVehicle(vehicles[0]);
+        }
       })
       .catch((err) => {
         console.log(err);

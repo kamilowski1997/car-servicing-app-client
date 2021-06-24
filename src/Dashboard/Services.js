@@ -112,7 +112,7 @@ export default function Services(props) {
       })
       .then((services) => {
         setServices(services);
-        console.log(services);
+        //console.log(services);
       })
       .catch((err) => {
         console.log(err);

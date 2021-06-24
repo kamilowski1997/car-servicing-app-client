@@ -33,6 +33,7 @@ function Row(props) {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
   const [rowColor, setRowColor] = useState('white');
+  const [rowMileage, setRowMileage] = useState(row.mileage);
   
   useEffect(()=>{
     const rowDate = new Date(row.date);
@@ -46,6 +47,9 @@ function Row(props) {
       setRowColor('#e6d863');
     }else{
       setRowColor('white');
+    }
+    if(rowMileage==2147483647){
+      setRowMileage('');
     }
   });
 
@@ -61,7 +65,7 @@ function Row(props) {
           {row.name}
         </TableCell>
         <TableCell >{moment(row.date).format('DD.MM.YYYY')}</TableCell>
-        <TableCell >{row.mileage}</TableCell>
+        <TableCell >{rowMileage}</TableCell>
         <TableCell >{row.time_interval}</TableCell>
         <TableCell >{row.mileage_interval}</TableCell>
       </TableRow>
@@ -91,7 +95,7 @@ function Row(props) {
                 </Grid>
                 <Grid item xs={12} container>
                   <Paper>
-                    <EditNextMaintenance row={row} nextMaintenanceId={row.id} setRefresh={props.setRefresh}/>
+                    <EditNextMaintenance row={row} nextMaintenanceId={row.id} setRefresh={props.setRefresh} rowMileage={rowMileage}/>
                   </Paper>
                 </Grid>
               </Grid>
