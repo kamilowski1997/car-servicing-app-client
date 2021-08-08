@@ -82,7 +82,6 @@ export default function SignUp() {
     event.preventDefault();
     try {
       const res = await signUp(event.target.username.value, event.target.email.value, event.target.password.value)
-      console.log(res)
       if(res.status===200){
         alert("Account created");
       }

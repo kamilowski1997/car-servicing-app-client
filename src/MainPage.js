@@ -42,7 +42,6 @@ export default function MainPage() {
       })
       .catch((err) => {
         setIsBeforeRender(false);
-        console.log(err);
       });
   };
   
@@ -59,6 +58,5 @@ export default function MainPage() {
     <div>
       {mainPage}
     </div>
-    
   );
 }
