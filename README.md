@@ -1,5 +1,8 @@
 # car-servicing-app-client
 Car servicing client app
+It is a frontend React app made to help users remember about servicing theirs cars/vehicles. This app also can be used as servicing history of user's vehicles. Backend app for this application can be found on https://github.com/kamilowski1997/car-servicing-app-server 
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
